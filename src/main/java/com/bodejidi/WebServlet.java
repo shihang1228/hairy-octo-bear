@@ -9,7 +9,89 @@ public class WebServlet extends HttpServlet
 {
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException 
     {
-        resp.getWriter().println("hello webservlet!!!");
+        resp.getWriter().println("Member Servlet");
+        try 
+		{
+           
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+        } 
+		catch (Exception ex) 
+		{
+		
+        }
+ 
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+ 
+        try 
+		{
+            conn =
+                DriverManager.getConnection("jdbc:mysql://localhost/test?"
+                                          + "user=root"
+                                          + "&password=");
+ 
+            resp.setContentType("text/plain; charset=UTF-8");
+            stmt = conn.createStatement();
+            String sql = "SELECT * from member";
+            System.out.println("SQL: " + sql);
+            rs = stmt.executeQuery(sql);
+            while(rs.next()) 
+			{
+                Long id = rs.getLong("id");
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+                resp.getWriter().println(id + " : " + firstName + " " + lastName + "\n");
+            }
+        } 
+		catch (SQLException ex) 
+		{
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+            resp.getWriter().println("Error!");
+        } 
+		finally 
+		{
+            if (rs != null) 
+			{
+                try 
+				{
+                    rs.close();
+                } 
+				catch (SQLException sqlEx) 
+				{
+                     
+                }
+                rs = null;
+            }
+ 
+            if (stmt != null) 
+			{
+                try 
+				{
+                    stmt.close();
+                } 
+				catch (SQLException sqlEx) 
+				{
+                     // ignore
+                }
+                stmt = null;
+            }
+ 
+            if (conn != null) 
+			{
+                try 
+				{
+                    conn.close();
+                } 
+				catch (SQLException sqlEx) 
+				{
+                     // ignore
+                }
+                conn = null;
+            }
+        }
     }
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException
     {
