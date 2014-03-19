@@ -9,10 +9,9 @@ public class WebServlet extends HttpServlet
 {
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException 
     {
-        resp.getWriter().println("Member Servlet");
+        
         try 
 		{
-           
             Class.forName("com.mysql.jdbc.Driver").newInstance();
         } 
 		catch (Exception ex) 
@@ -31,18 +30,20 @@ public class WebServlet extends HttpServlet
                                           + "user=root"
                                           + "&password=");
  
-            resp.setContentType("text/plain; charset=UTF-8");
+            resp.setContentType("text/html; charset=UTF-8");
             stmt = conn.createStatement();
             String sql = "SELECT * from member";
             System.out.println("SQL: " + sql);
-            rs = stmt.executeQuery(sql);
+            rs = stmt.executeQuery(sql); 
+			resp.getWriter().println("<html><head><title>Member List</title></head><body><h1>Member List</h1><table border=\"2\"><tr><td>ID</td><td>Name</td></tr>\n");
             while(rs.next()) 
 			{
                 Long id = rs.getLong("id");
                 String firstName = rs.getString("first_name");
                 String lastName = rs.getString("last_name");
-                resp.getWriter().println(id + " : " + firstName + " " + lastName + "\n");
+                resp.getWriter().println("<tr><td>" + id + "</td><td>" + firstName + " " + lastName + "</td></tr>\n");
             }
+			resp.getWriter().println("</table></body></html>");
         } 
 		catch (SQLException ex) 
 		{
