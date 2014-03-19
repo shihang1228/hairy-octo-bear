@@ -14,4 +14,6 @@ deploy.sh
 清空编译部署
 clean.sh&&compile.sh&&deploy.sh
 
+初始化数据库
+导入数据库脚本：sql/mysql.sql
 
