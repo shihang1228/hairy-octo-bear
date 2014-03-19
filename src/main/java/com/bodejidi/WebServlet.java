@@ -10,10 +10,10 @@ public class WebServlet extends HttpServlet
     {
         resp.getWriter().println("hello webservlet!!!");
     }
-	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException
-	{
-	    String firstName = req.getParameter("first_name");
-		String lastName = req.getParameter("last_name");
-		resp.getWriter().println("Add" + " " + firstName + "    " + lastName + "success!!!");
-	}
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException
+    {
+        String firstName = req.getParameter("first_name");
+        String lastName = req.getParameter("last_name");
+        resp.getWriter().println("Add" + " " + firstName + "    " + lastName + "success!!!");
+    }
 }
