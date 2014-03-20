@@ -172,6 +172,16 @@ public class WebServlet extends HttpServlet
                 resp.getWriter().println("</br><a href=\"\">Member List</a>");
                 resp.getWriter().println("</body></html>");    
             }
+            else if("delete".equals(action))
+            {
+                String sql = "DELETE FROM  member WHERE ID = '" + id + "'";
+                System.out.println("SQL: " + sql);
+                stmt.execute(sql);
+                resp.getWriter().println("Delete " + firstName + "  "  +  lastName + "Success!");
+                resp.getWriter().println("<html><head>member list</head><body>");
+                resp.getWriter().println("</br><a href=\"\">Member List</a>");
+                resp.getWriter().println("</body></html>");              
+            }   
         } 
         catch (SQLException ex)
         {
