@@ -32,20 +32,44 @@ public class WebServlet extends HttpServlet
  
             resp.setContentType("text/html; charset=UTF-8");
             stmt = conn.createStatement();
+			String pid = req.getParameter("id");
             String sql = "SELECT * from member";
             System.out.println("SQL: " + sql);
-            rs = stmt.executeQuery(sql); 
-			resp.getWriter().println("<html><head><title>Member List</title></head><body><h1>Member List</h1><table border=\"2\"><tr><td>ID</td><td>Name</td></tr>\n");
-            while(rs.next()) 
+            if(pid == null)
 			{
-                Long id = rs.getLong("id");
+			    rs = stmt.executeQuery(sql); 
+			    resp.getWriter().println("<html><head><title>Member List</title></head><body><h1>Member List</h1><table border=\"2\"><tr><td>ID</td><td>Name</td></tr>\n");
+                while(rs.next()) 
+			    {
+                    Long id = rs.getLong("id");
+                    String firstName = rs.getString("first_name");
+                    String lastName = rs.getString("last_name");
+                    resp.getWriter().println("<tr><td><a href=\"?id=" + id + "\">" + id + "</a></td><td>" + firstName + " " + lastName + "</td></tr>\n");
+                }				
+			    resp.getWriter().println("</table></body></html>");
+                resp.getWriter().println("<p><a href=\".\">Add member</a></p>");
+                resp.getWriter().println("</body></html>");
+		    }
+            else
+            {
+			    sql = sql + " WHERE id=" + pid;
+                System.out.println("SQL: " + sql);
+                rs = stmt.executeQuery(sql);
+				
+                rs.next();				
+				Long id = rs.getLong("id");
                 String firstName = rs.getString("first_name");
                 String lastName = rs.getString("last_name");
-                resp.getWriter().println("<tr><td>" + id + "</td><td>" + firstName + " " + lastName + "</td></tr>\n");
-            }
-			resp.getWriter().println("</table></body></html>");
-            resp.getWriter().println("<p><a href=\".\">Add member</a></p>");
-            resp.getWriter().println("</body></html>");
+				resp.getWriter().println("<html><head><title>Member</title></head><body>"                                         
+				                         + "  <h1>Member</h1>"
+                                         + "  <table border=\"1\">\n");
+                resp.getWriter().println("    <tr><td>ID</td><td>" + id + "</td></tr>\n");
+                resp.getWriter().println("    <tr><td>First Name</td><td>" + firstName + "</td></tr>\n");
+                resp.getWriter().println("    <tr><td>Last Name</td><td>" + lastName + "</td></tr>\n");
+                resp.getWriter().println("  </table>");
+                resp.getWriter().println("  <p><a href=\"member\">Member list</a></p>");
+                resp.getWriter().println("</body></html>");
+            }			
         } 
 		catch (SQLException ex) 
 		{
