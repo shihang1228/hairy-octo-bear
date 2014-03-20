@@ -64,11 +64,12 @@ public class WebServlet extends HttpServlet
                                        + "  <form action = \"member\" method = \"POST\">"
                                        + "      <table border=\"1\">\n");
                 resp.getWriter().println("          <tr><td>ID</td><td>" + id + "</td></tr>\n");
-                resp.getWriter().println("          <tr><td>First Name</td><td>" + firstName + "</td></tr>\n");
-                resp.getWriter().println("          <tr><td>Last Name</td><td>" + lastName + "</td></tr>\n");
+                resp.getWriter().println("          <tr><td>First Name</td><td><input type=\"text\" name=\"first_name\" value=\"" + firstName + "\" /></td></tr>\n");
+                resp.getWriter().println("          <tr><td>Last Name</td><td><input type=\"text\" name=\"last_name\" value=\"" + lastName + "\" /></td></tr>\n");
                 resp.getWriter().println("      </table>");
-                resp.getWriter().println("      <input type=\"submit\" name=\"update\" value=\"update\">");
-                resp.getWriter().println("      <input type=\"submit\" name=\"delete\" value=\"delete\">");
+                resp.getWriter().println("      <input type=\"submit\" name=\"action\" value=\"update\"/>");
+                resp.getWriter().println("      <input type=\"submit\" name=\"action\" value=\"delete\"/>");
+                resp.getWriter().println("      <input type=\"hidden\" name=\"id\" value=\"" + id + "\" />");
                 resp.getWriter().println("  </form>");
                 resp.getWriter().println("  <p><a href=\"member\">Member list</a></p>");
                 resp.getWriter().println("</body></html>");
@@ -125,8 +126,10 @@ public class WebServlet extends HttpServlet
     }
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException
     {
+        String id = req.getParameter("id");  
         String firstName = req.getParameter("first_name");
         String lastName = req.getParameter("last_name");
+        String action = req.getParameter("action");
         resp.setContentType("text/html; charset=UTF-8");
  
         try 
@@ -148,15 +151,27 @@ public class WebServlet extends HttpServlet
                                           + "user=root"
                                           + "&password=");
             stmt = conn.createStatement();
-            
-            String sql = "INSERT INTO member(first_name, last_name, date_created, last_updated) "
-                       + "VALUES('" + firstName + "', '" + lastName + "', now(), now());";
-            System.out.println("SQL: " + sql);
-            stmt.execute(sql);
-            resp.getWriter().println("Add " + firstName + " " + lastName + " success!");
-            resp.getWriter().println("<html><head>member list</head><body>");
-            resp.getWriter().println("</br><a href=\"\">Member List</a>");
-            resp.getWriter().println("</body></html>");
+            if (id == null)
+            {
+                String sql = "INSERT INTO member(first_name, last_name, date_created, last_updated) "
+                           + "VALUES('" + firstName + "', '" + lastName + "', now(), now());";
+                System.out.println("SQL: " + sql);
+                stmt.execute(sql);
+                resp.getWriter().println("Add " + firstName + " " + lastName + " success!");
+                resp.getWriter().println("<html><head>member list</head><body>");
+                resp.getWriter().println("</br><a href=\"\">Member List</a>");
+                resp.getWriter().println("</body></html>");
+            }
+            else if ("update".equals(action))
+            {
+                String sql = "UPDATE member SET first_name = '" + firstName + "',last_name = '" + lastName + "' WHERE ID = '" + id + "'";
+                System.out.println("SQL: " + sql);
+                stmt.execute(sql);
+                resp.getWriter().println("Update " + firstName + "  "  +  lastName + "Success!");
+                resp.getWriter().println("<html><head>member list</head><body>");
+                resp.getWriter().println("</br><a href=\"\">Member List</a>");
+                resp.getWriter().println("</body></html>");    
+            }
         } 
         catch (SQLException ex)
         {
