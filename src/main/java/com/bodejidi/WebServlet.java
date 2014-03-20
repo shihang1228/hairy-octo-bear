@@ -57,15 +57,19 @@ public class WebServlet extends HttpServlet
                 
                 rs.next();                
                 Long id = rs.getLong("id");
+                String firstName = rs.getString("first_name");
                 String lastName = rs.getString("last_name");
                 resp.getWriter().println("<html><head><title>Member</title></head><body>"                                         
                                        + "  <h1>Member</h1>"
-                                       + "  <>"
-                                       + "  <table border=\"1\">\n");
-                resp.getWriter().println("    <tr><td>ID</td><td>" + id + "</td></tr>\n");
-                resp.getWriter().println("    <tr><td>First Name</td><td>" + firstName + "</td></tr>\n");
-                resp.getWriter().println("    <tr><td>Last Name</td><td>" + lastName + "</td></tr>\n");
-                resp.getWriter().println("  </table>");
+                                       + "  <form action = \"member\" method = \"POST\">"
+                                       + "      <table border=\"1\">\n");
+                resp.getWriter().println("          <tr><td>ID</td><td>" + id + "</td></tr>\n");
+                resp.getWriter().println("          <tr><td>First Name</td><td>" + firstName + "</td></tr>\n");
+                resp.getWriter().println("          <tr><td>Last Name</td><td>" + lastName + "</td></tr>\n");
+                resp.getWriter().println("      </table>");
+                resp.getWriter().println("      <input type=\"submit\" name=\"update\" value=\"update\">");
+                resp.getWriter().println("      <input type=\"submit\" name=\"delete\" value=\"delete\">");
+                resp.getWriter().println("  </form>");
                 resp.getWriter().println("  <p><a href=\"member\">Member list</a></p>");
                 resp.getWriter().println("</body></html>");
             }            
@@ -144,6 +148,7 @@ public class WebServlet extends HttpServlet
                                           + "user=root"
                                           + "&password=");
             stmt = conn.createStatement();
+            
             String sql = "INSERT INTO member(first_name, last_name, date_created, last_updated) "
                        + "VALUES('" + firstName + "', '" + lastName + "', now(), now());";
             System.out.println("SQL: " + sql);
