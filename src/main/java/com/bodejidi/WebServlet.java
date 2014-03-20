@@ -44,6 +44,8 @@ public class WebServlet extends HttpServlet
                 resp.getWriter().println("<tr><td>" + id + "</td><td>" + firstName + " " + lastName + "</td></tr>\n");
             }
 			resp.getWriter().println("</table></body></html>");
+            resp.getWriter().println("<p><a href=\".\">Add member</a></p>");
+            resp.getWriter().println("</body></html>");
         } 
 		catch (SQLException ex) 
 		{
@@ -98,6 +100,7 @@ public class WebServlet extends HttpServlet
     {
         String firstName = req.getParameter("first_name");
         String lastName = req.getParameter("last_name");
+		resp.setContentType("text/html; charset=UTF-8");
  
         try 
 		{ 
@@ -123,6 +126,9 @@ public class WebServlet extends HttpServlet
             System.out.println("SQL: " + sql);
             stmt.execute(sql);
             resp.getWriter().println("Add " + firstName + " " + lastName + " success!");
+			resp.getWriter().println("<html><head>member list</head><body>");
+			resp.getWriter().println("</br><a href=\"\">Member List</a>");
+			resp.getWriter().println("</body></html>");
         } 
 		catch (SQLException ex)
 		{
